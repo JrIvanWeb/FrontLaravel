@@ -31,7 +31,7 @@ class AsignaturaRepository implements IAsignaturaRepository
        }
 
        $asignatura->update($data);
-       return $asiganatura;
+       return $asignatura;
     }
 
     public function delete($id): bool

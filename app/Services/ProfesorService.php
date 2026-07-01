@@ -32,11 +32,11 @@ class ProfesorService implements IProfesorService{
 
     public function update($id, array $data){
 
-        return $this->repository->find($id);
+        return $this->repository->update($id, $data);
 
     }
 
     public function delete ($id){
-        return $this->repository->find($id);
+        return $this->repository->delete($id);
     }
 }

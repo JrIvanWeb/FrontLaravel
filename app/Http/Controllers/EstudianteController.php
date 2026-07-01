@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Requests\Estudiante\StoreRequest;
-use App\Requests\Estudiante\UpdateRequest;
+use App\Http\Requests\Estudiante\StoreRequest;
+use App\Http\Requests\Estudiante\UpdateRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Estudiante;
 use App\Services\EstudianteService;
