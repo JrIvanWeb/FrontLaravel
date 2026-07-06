@@ -9,6 +9,8 @@ use App\Http\Requests\Estudiante\UpdateRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Estudiante;
 use App\Services\EstudianteService;
+use App\DTOs\Estudiante\StoreEstudianteDTO;
+use App\DTOs\Estudiante\UpdateEstudianteDTO;
 
 class EstudianteController extends Controller
 {
@@ -33,7 +35,7 @@ class EstudianteController extends Controller
     public function store(StoreRequest $request): JsonResponse
     {
         $estudiante = $this->estudianteService->create(
-            $request->validated()
+            $request->toDTO()
         );
 
         return response()->json($estudiante, 201);
@@ -60,7 +62,7 @@ class EstudianteController extends Controller
     public function update(UpdateRequest $request, string $id)
     {
 
-        $estudiante=$this->estudianteService->update($id, $request->validated());
+        $estudiante=$this->estudianteService->update($id, $request->toDTO());
         
         if(!$estudiante){
             return response()->json(['message' => 'Estudiante no encontrado'], 404);

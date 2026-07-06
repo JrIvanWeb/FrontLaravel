@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Estudiante;
 use App\Interfaces\IEstudianteService;
 use App\Repositories\Interfaces\IEstudianteRepository;
+use App\DTOs\Estudiante\StoreEstudianteDTO;
+use App\DTOs\Estudiante\UpdateEstudianteDTO;
 
 class EstudianteService implements IEstudianteService
 {
@@ -20,9 +22,9 @@ class EstudianteService implements IEstudianteService
         return $this->repository->getAll();
     }
 
-    public function create(array $data){
+    public function create(StoreEstudianteDTo $dto){
 
-        return $this->repository->create($data);
+        return $this->repository->create($dto);
 
     }
 
@@ -30,9 +32,9 @@ class EstudianteService implements IEstudianteService
         return $this->repository->find($id);
     }
 
-   public function update($id, array $data)
+   public function update($id, UpdateEstudianteDTO $dto)
     {
-        return $this->repository->update($id, $data);
+        return $this->repository->update($id, $dto);
     }
 
     public function delete($id)

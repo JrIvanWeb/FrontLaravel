@@ -4,6 +4,8 @@ namespace App\Repositories\Implementations;
 
 use App\Models\Estudiante;
 use App\Repositories\Interfaces\IEstudianteRepository;
+use App\DTOs\Estudiante\StoreEstudianteDTO;
+use App\DTOs\Estudiante\UpdateEstudianteDTO;
 
 class EstudianteRepository implements IEstudianteRepository {
     
@@ -13,10 +15,14 @@ class EstudianteRepository implements IEstudianteRepository {
         return Estudiante::with('curso')->get();
     }
 
-    public function create(array $data): Estudiante
+    public function create(StoreEstudianteDTO $dto): Estudiante
     {
 
-        return Estudiante::create($data);
+         return Estudiante::create([
+        'nombres' => $dto->nombres,
+        'apellidos' => $dto->apellidos,
+        'curso_id' => $dto->curso_id,
+        ]);
 
     }
 
@@ -25,7 +31,7 @@ class EstudianteRepository implements IEstudianteRepository {
         return Estudiante::find($id);
     }
 
-        public function update($id, array $data): ?Estudiante
+    public function update($id, UpdateEstudianteDTO $dto): ?Estudiante
     {
         $estudiante = Estudiante::find($id);
 
@@ -33,8 +39,13 @@ class EstudianteRepository implements IEstudianteRepository {
             return null;
         }
 
-        $estudiante->update($data);
+        $estudiante->update([
+             'nombres'   => $dto->nombres,
+             'apellidos' => $dto->apellidos,
+             'curso_id'  => $dto->curso_id,
+              ]);
 
+              
         return $estudiante;
     }
 
