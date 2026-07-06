@@ -4,6 +4,7 @@ namespace App\Repositories\implementations;
 
 use App\Models\Curso;
 use App\Repositories\Interfaces\ICursoRepository;
+use App\DTOs\Curso\StoreCursoDTO;
 
 
 class CursoRepository implements ICursoRepository 
@@ -13,9 +14,11 @@ class CursoRepository implements ICursoRepository
     return Curso::all();
     }
 
-   public function create (array $data): Curso
+   public function create (StoreCursoDTO $dto): Curso
    {
-    return Curso::create($data);
+    return Curso::create([
+        'nombre' => $dto->nombre
+        ]);
    }
 
    public function getById($id): Curso

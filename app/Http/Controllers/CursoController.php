@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Curso;
 use App\Services\CursoService;
+use App\DTOs\Curso\StoreCursoDTO;
 
 class CursoController extends Controller
 {
@@ -33,7 +34,7 @@ class CursoController extends Controller
     { 
     
         $curso = $this->cursoService->create(
-            $request->validated()
+            $request->toDTO()
         );
 
         return response()->json($curso, 201);

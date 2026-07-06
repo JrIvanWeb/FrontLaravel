@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Interfaces;
+use App\DTOs\Curso\StoreCursoDTO;
+use App\DTOs\Curso\UpdateCursoDTO;
 
 interface ICursoService {
     public function getAll();
 
-    public function create (array $data);
+    public function create (StoreCursoDTO $dto);
 
     public function getById($id);
 

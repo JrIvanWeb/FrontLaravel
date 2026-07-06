@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Curso;
 use App\Interfaces\ICursoService;
 use App\Repositories\Interfaces\ICursoRepository;
+use App\DTOs\Curso\StoreCursoDTO;
 
 class CursoService implements IcursoService
 {
@@ -21,9 +22,9 @@ class CursoService implements IcursoService
 
    }
     
-   public function create (array $data)
+   public function create (StoreCursoDTO $dto)
    {
-    return $this->repository->create($data);
+    return $this->repository->create($dto);
    }
 
    public function getById($id){
