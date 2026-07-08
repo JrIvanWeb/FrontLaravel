@@ -9,6 +9,8 @@ use App\Services\ProfesorService;
 use App\Http\Requests\Profesor\StoreRequest;
 use App\Http\Requests\Profesor\UpdateRequest;
 use Illuminate\Http\JsonResponse;
+use App\DTOs\Profesor\StoreProfesorDTO;
+use App\DTOs\Profesor\UpdateProfesorDTO;
 
 class ProfesorController extends Controller
 {
@@ -33,7 +35,7 @@ class ProfesorController extends Controller
     public function store(StoreRequest $request)
     {
 
-        $profesor = $this->profesorService->create($request->validated());
+        $profesor = $this->profesorService->create($request->toDTO());
 
         return response()->json($profesor, 201);
     }
@@ -57,7 +59,7 @@ class ProfesorController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        $profesor = $this->profesorService->update($id, $request->validated());
+        $profesor = $this->profesorService->update($id, $request->toDTO());
 
         if(!$profesor){
             return response()->json(['message' => 'Profesor no encontrado'], 404);

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\Curso;
 use App\Services\CursoService;
 use App\DTOs\Curso\StoreCursoDTO;
+use App\DTOs\Curso\UpdateCursoDTO;
+
 
 class CursoController extends Controller
 {
@@ -60,7 +62,7 @@ class CursoController extends Controller
     public function update(UpdateRequest $request, string $id): JsonResponse
     {
 
-        $curso =$this->cursoService->update($id, $request->validated());
+        $curso =$this->cursoService->update($id, $request->toDTO());
 
         if(!$curso){
             return response()->json(['message' => 'Curso no encontrado'], 404);

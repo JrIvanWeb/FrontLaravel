@@ -4,6 +4,7 @@ namespace App\Repositories\Interfaces;
 
 use App\Models\Curso;
 use App\DTOs\Curso\StoreCursoDTO;
+use App\DTOs\Curso\UpdateCursoDTO;
 
 interface ICursoRepository
 { 
@@ -13,7 +14,7 @@ interface ICursoRepository
 
     public function getById($id): ?Curso;
 
-    public function update($id, array $data): ?Curso;
+    public function update($id, UpdateCursoDTO $dto): ?Curso;
 
     public function delete($id): bool;
 }

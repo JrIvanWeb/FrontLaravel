@@ -4,6 +4,8 @@ namespace App\Repositories\Implementations;
 
 use App\Models\Asignatura;
 use App\Repositories\Interfaces\IAsignaturaRepository;
+use App\DTOs\Asignatura\StoreAsignaturaDTO;
+use App\DTOs\Asignatura\UpdateAsignaturaDTO;
 
 class AsignaturaRepository implements IAsignaturaRepository
 {
@@ -11,9 +13,11 @@ class AsignaturaRepository implements IAsignaturaRepository
         return Asignatura::all();
     }
 
-    public function create(array $data): Asignatura
+    public function create(StoreAsignaturaDTO $dto): Asignatura
     {
-        return asignatura::create($data);
+        return asignatura::create([
+            'nombre' => $dto->nombre
+        ]);
     }
 
     public function getById($id): Asignatura
@@ -21,7 +25,7 @@ class AsignaturaRepository implements IAsignaturaRepository
          return Asignatura::find($id);
     }
 
-    public function update ($id, array $data): Asignatura
+    public function update ($id, UpdateAsignaturaDTO $dto): Asignatura
     {
 
        $asignatura = Asignatura::find($id);
@@ -30,7 +34,9 @@ class AsignaturaRepository implements IAsignaturaRepository
         return null;
        }
 
-       $asignatura->update($data);
+       $asignatura->update([
+        'nombre' => $dto->nombre
+       ]);
        return $asignatura;
     }
 

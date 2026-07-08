@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Profesor;
 use App\Interfaces\IProfesorService;
 use App\Repositories\Interfaces\IProfesorRepository;
+use App\DTOs\Profesor\StoreProfesorDTO;
+use App\DTOs\Profesor\UpdateProfesorDTO;
 
 class ProfesorService implements IProfesorService{
 
@@ -19,9 +21,9 @@ class ProfesorService implements IProfesorService{
         return $this->repository->getAll();
     }
 
-    public function create(array $data){
+    public function create(StoreProfesorDTO $dto){
 
-        return $this->repository->create($data);
+        return $this->repository->create($dto);
 
     }
 
@@ -30,9 +32,9 @@ class ProfesorService implements IProfesorService{
         return $this->repository->find($id);
     }
 
-    public function update($id, array $data){
+    public function update($id, UpdateProfesorDTO $dto){
 
-        return $this->repository->update($id, $data);
+        return $this->repository->update($id, $dto);
 
     }
 

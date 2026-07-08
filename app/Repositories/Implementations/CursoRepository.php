@@ -5,6 +5,7 @@ namespace App\Repositories\implementations;
 use App\Models\Curso;
 use App\Repositories\Interfaces\ICursoRepository;
 use App\DTOs\Curso\StoreCursoDTO;
+use App\DTOs\Curso\UpdateCursoDTO;
 
 
 class CursoRepository implements ICursoRepository 
@@ -26,7 +27,7 @@ class CursoRepository implements ICursoRepository
     return Curso::find($id);
    }
 
-   public function update($id, array $data): Curso
+   public function update($id, UpdateCursoDTO $dto): Curso
    {
 
     $curso =  Curso::find($id);
@@ -35,7 +36,9 @@ class CursoRepository implements ICursoRepository
         return null;
     }
 
-    $curso->update ($data);
+    $curso->update ([
+           'nombre' => $dto->nombre
+    ]);
     return $curso;
    }
 

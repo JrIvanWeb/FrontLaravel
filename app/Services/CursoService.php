@@ -6,6 +6,7 @@ use App\Models\Curso;
 use App\Interfaces\ICursoService;
 use App\Repositories\Interfaces\ICursoRepository;
 use App\DTOs\Curso\StoreCursoDTO;
+use App\DTOs\Curso\UpdateCursoDTO;
 
 class CursoService implements IcursoService
 {
@@ -32,10 +33,10 @@ class CursoService implements IcursoService
     return $this->repository->find($id);
    }
 
-   public function update($id, array $data)
+   public function update($id, UpdateCursoDTO $dto)
    {
 
-    return $this->repository->update($id, $data);
+    return $this->repository->update($id, $dto);
    }
 
     public function delete ($id){

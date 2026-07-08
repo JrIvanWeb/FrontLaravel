@@ -11,7 +11,7 @@ interface ICursoService {
 
     public function getById($id);
 
-    public function update($id, array $data);
+    public function update($id, UpdateCursoDTO $dto);
 
     public function delete ($id);
 }

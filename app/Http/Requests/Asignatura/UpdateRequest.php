@@ -4,6 +4,7 @@ namespace App\Http\Requests\Asignatura;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\DTOs\Asignatura\UpdateAsignaturaDTO;
 
 class UpdateRequest extends FormRequest
 {
@@ -25,5 +26,11 @@ class UpdateRequest extends FormRequest
         return [
             'nombre' => 'required|string|max:255',
         ];
+    }
+
+    public function toDTO(): UpdateAsignaturaDTO{
+        return new UpdateAsignaturaDTO(
+            nombre: $this->nombre
+        );
     }
 }

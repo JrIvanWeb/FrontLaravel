@@ -9,6 +9,8 @@ use App\Services\AsignaturaService;
 use App\Http\Requests\Asignatura\StoreRequest;
 use App\Http\Requests\Asignatura\UpdateRequest;
 use Illuminate\Http\JsonResponse;
+use App\DTOs\Asignatura\StoreAsignaturaDTO;
+use App\DTOs\Asignatura\UpdateAsignaturaDTO;
 
 class AsignaturaController extends Controller
 {
@@ -31,7 +33,7 @@ class AsignaturaController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $asignatura = $this->asignaturaService->create($request->validated());
+        $asignatura = $this->asignaturaService->create($request->toDTO());
 
         return response()->json($asignatura, 201);
     }
@@ -54,7 +56,7 @@ class AsignaturaController extends Controller
      */
     public function update(UpdateRequest $request, string $id)
     {
-        $asignatura= $this->asignaturaService->update($id, $request->validated());
+        $asignatura= $this->asignaturaService->update($id, $request->toDTO());
 
         if(!$asignatura){
             return response()->json(['message' => 'No encontrada'], 404);

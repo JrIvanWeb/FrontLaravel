@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Asignatura;
 use App\Interfaces\IAsignaturaService;
 use App\Repositories\Interfaces\IAsignaturaRepository;
+use App\DTOs\Asignatura\StoreAsignaturaDTO;
+use App\DTOs\Asignatura\UpdateAsignaturaDTO;
 
  class AsignaturaService
 {
@@ -19,17 +21,17 @@ use App\Repositories\Interfaces\IAsignaturaRepository;
         return $this->repository->getAll();
     }
 
-    public function create(array $data){
-        return $this->repository->create($data);
+    public function create(StoreAsignaturaDTO $dto){
+        return $this->repository->create($dto);
     }
     
     public function getById($id){
          return $this->repository->find($id);
     }
 
-    public function update ($id, array $data){
+    public function update ($id, UpdateAsignaturaDTO $dto){
 
-       return $this->repository->update($id, $data);
+       return $this->repository->update($id, $dto);
     }
 
     public function delete($id){
