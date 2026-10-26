@@ -25,11 +25,15 @@ La API local queda en `http://127.0.0.1:8000/api`. Para iniciar solo el backend,
 
 ### Autenticación y roles
 
+- `GET /api/sliders`: devuelve los banners activos del inicio. El frontend carga las imágenes desde `storage/app/public`; ejecuta `php artisan storage:link` para servirlas.
+- En desarrollo, `CORS_ALLOWED_ORIGINS` debe incluir el origen de Angular (`http://localhost:4200` o `http://127.0.0.1:4200`).
+
 Crea los roles con `php artisan db:seed` y crea el primer administrador con `php artisan back-ict:admin:create`. El comando solicita los datos y la contraseña de forma interactiva; nunca se define una contraseña inicial en el código.
 
 - `POST /api/auth/login`: recibe `Correo` y `Password`, y devuelve un token Bearer.
 - `POST /api/auth/forgot-password`: recibe `Correo`; envía un código temporal si la cuenta está activa.
 - `POST /api/auth/reset-password`: recibe `Correo`, `Codigo`, `Password` y `Password_confirmation`.
+- `POST /api/auth/change-password`: requiere autenticación y recibe `CurrentPassword`, `Password` y `Password_confirmation`; al cambiarla, revoca todas las sesiones activas de la cuenta.
 - `GET /api/auth/me`: devuelve el usuario autenticado y su rol.
 - `DELETE /api/auth/logout`: revoca el token enviado.
 - `GET /api/tipos-documento`: devuelve el catálogo para formularios de usuario; solo Admin puede administrarlo.
@@ -69,9 +73,25 @@ Para una regla de negocio específica dentro de un servicio, lanza la excepción
 
 ### Producción
 
-Configura `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL` con HTTPS, una clave `APP_KEY` segura, la conexión a la base de datos de producción y `CORS_ALLOWED_ORIGINS` con el dominio real del frontend. No subas `.env` al repositorio. Instala dependencias, compila los recursos, ejecuta migraciones y `php artisan optimize`; apunta el servidor web a `public/` y concede permisos de escritura a `storage/` y `bootstrap/cache/`.
+El frontend de producción configurado consume `https://ict.com/api`. Usa `.env.production.example` como guía y crea `.env` en el servidor; completa las credenciales MySQL y SMTP que entrega el hosting. No publiques ni compartas `.env`, contraseñas, ni la clave `APP_KEY`. Mantén `APP_DEBUG=false` y restringe `CORS_ALLOWED_ORIGINS` a los orígenes HTTPS del frontend.
 
-Antes de publicar, define límites de expiración/rotación de tokens y restringe `CORS_ALLOWED_ORIGINS` al dominio del frontend.
+En el servidor, conserva el proyecto Laravel fuera del directorio público y configura el document root del dominio `ict.com` para que apunte a la carpeta `public/` de Laravel. El directorio público debe servir la API bajo `/api` y los archivos subidos bajo `/storage`. Si el hosting no permite apuntar el document root a `public/`, consulta con el proveedor la configuración segura; no expongas el resto del proyecto ni el archivo `.env` dentro de `public_html`.
+
+Con acceso SSH, después de cargar el proyecto y configurar `.env`, ejecuta desde la raíz de Laravel:
+
+```sh
+composer install --no-dev --optimize-autoloader
+php artisan key:generate
+php artisan migrate --force
+php artisan db:seed --force
+php artisan storage:link
+php artisan optimize
+php artisan back-ict:admin:create
+```
+
+`key:generate` solo se ejecuta al crear la aplicación por primera vez; conserva la misma `APP_KEY` en despliegues futuros. Haz una copia de seguridad de la base de datos antes de aplicar migraciones. El seeder crea los roles iniciales y el comando de administrador solicita sus credenciales de forma interactiva. No uses `php artisan serve` como servidor público.
+
+Comprueba que `storage/` y `bootstrap/cache/` tengan permisos de escritura para el usuario de PHP. Configura el hosting para usar HTTPS, que PHP disponga de `pdo_mysql`, `fileinfo`, `mbstring`, `openssl` y `zip`, y que `upload_max_filesize`/`post_max_size` permitan las imágenes de hasta 5 MB que admite la API. El SMTP de `.env` debe ser válido para que funcionen la recuperación de contraseña y los correos de admisión. Los tokens de administración vencen tras 30 minutos de inactividad.
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 

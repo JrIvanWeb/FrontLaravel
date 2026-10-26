@@ -28,6 +28,8 @@ use App\Services\TipoGaleriaService;
 use App\Services\TipoDocumentoService;
 use App\Services\UsuarioService;
 use App\Services\PasswordResetService;
+use Laravel\Sanctum\PersonalAccessToken;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -47,5 +49,17 @@ class AppServiceProvider extends ServiceProvider
 		$this->app->bind(IUsuarioService::class, UsuarioService::class);
 		$this->app->bind(IPasswordResetService::class, PasswordResetService::class);
 		$this->app->bind(IRolService::class, RolService::class);
+	}
+
+	public function boot(): void
+	{
+		Sanctum::authenticateAccessTokensUsing(
+			static function (PersonalAccessToken $token, bool $isValid): bool {
+				$lastActivity = $token->last_used_at ?? $token->created_at;
+
+				return $isValid
+					&& $lastActivity->gt(now()->subMinutes((int) config('session.lifetime')));
+			}
+		);
 	}
 }

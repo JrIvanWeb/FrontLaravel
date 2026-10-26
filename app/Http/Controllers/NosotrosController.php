@@ -3,12 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\INosotrosService;
+use App\Models\Nosotros;
+use Illuminate\Database\Eloquent\Collection;
 
 class NosotrosController extends ApiResourceController
 {
     public function __construct(INosotrosService $service)
     {
         parent::__construct($service);
+    }
+
+    public function index(): Collection
+    {
+        return Nosotros::query()->orderByDesc('FechaActualizacion')->orderByDesc('Id')->limit(1)->get();
+    }
+
+    public function adminIndex(): Collection
+    {
+        return Nosotros::query()->orderByDesc('FechaActualizacion')->orderByDesc('Id')->get();
     }
 
     protected array $rules = [

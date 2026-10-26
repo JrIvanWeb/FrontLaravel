@@ -7,6 +7,7 @@ use App\Interfaces\IPasswordResetService;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -33,7 +34,11 @@ class AuthController extends Controller
         }
 
         return response()->json([
-            'token' => $user->createToken('back-ict-admin')->plainTextToken,
+            'token' => $user->createToken(
+                'back-ict-admin',
+                ['*'],
+                now()->addMinutes((int) config('session.lifetime'))
+            )->plainTextToken,
             'token_type' => 'Bearer',
             'usuario' => $user->load('rol'),
         ]);
@@ -70,6 +75,26 @@ class AuthController extends Controller
             $data['Codigo'],
             $data['Password']
         );
+
+        return response()->json(['message' => 'La contraseña se actualizó correctamente.']);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $data = $request->validate([
+            'CurrentPassword' => ['required', 'string'],
+            'Password' => ['required', 'confirmed', PasswordRule::min(12)],
+        ]);
+
+        $user = $request->user();
+        if (!Hash::check($data['CurrentPassword'], $user->Password)) {
+            throw ValidationException::withMessages([
+                'CurrentPassword' => ['La contraseña actual no es correcta.'],
+            ]);
+        }
+
+        $user->forceFill(['Password' => $data['Password']])->save();
+        $user->tokens()->delete();
 
         return response()->json(['message' => 'La contraseña se actualizó correctamente.']);
     }

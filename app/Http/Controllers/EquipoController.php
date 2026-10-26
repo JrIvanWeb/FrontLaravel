@@ -3,12 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\IEquipoService;
+use App\Models\Equipo;
+use Illuminate\Database\Eloquent\Collection;
 
 class EquipoController extends ApiResourceController
 {
     public function __construct(IEquipoService $service)
     {
         parent::__construct($service);
+    }
+
+    public function index(): Collection
+    {
+        return Equipo::query()->where('Estado', true)->orderBy('Id')->get();
+    }
+
+    public function adminIndex(): Collection
+    {
+        return Equipo::query()->orderBy('Id')->get();
     }
 
     protected array $rules = [
