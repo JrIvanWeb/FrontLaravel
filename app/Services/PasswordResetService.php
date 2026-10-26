@@ -48,6 +48,7 @@ class PasswordResetService implements IPasswordResetService
         } catch (Throwable $exception) {
             DB::table('password_reset_tokens')->where('email', $normalizedEmail)->delete();
             report($exception);
+            throw $exception;
         }
     }
 

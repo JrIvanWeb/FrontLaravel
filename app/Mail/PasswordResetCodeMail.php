@@ -21,7 +21,7 @@ class PasswordResetCodeMail extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Código para recuperar tu contraseña - Back-ICT');
+        return new Envelope(subject: 'Código para recuperar tu contraseña - Instituto de Capacitación Técnica');
     }
 
     public function content(): Content

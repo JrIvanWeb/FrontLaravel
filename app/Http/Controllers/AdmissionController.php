@@ -7,6 +7,7 @@ use App\Models\Info;
 use App\Models\Programa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdmissionController extends Controller
@@ -25,7 +26,11 @@ class AdmissionController extends Controller
         ]);
 
         $program = Programa::query()->findOrFail($data['programId']);
-        $recipient = Info::query()->orderBy('Id')->value('Correo') ?: config('mail.admissions_to');
+        $info = Info::query()->orderBy('Id')->first(['Correo', 'Logo']);
+        $recipient = $info?->Correo ?: config('mail.admissions_to');
+        $logoPath = $info?->Logo && Storage::disk('public')->exists($info->Logo)
+            ? Storage::disk('public')->path($info->Logo)
+            : null;
 
         if (!$recipient) {
             return response()->json([
@@ -38,6 +43,7 @@ class AdmissionController extends Controller
             email: $data['email'],
             phone: $data['phone'],
             program: $program->Nombre,
+            logoPath: $logoPath,
         ));
 
         return response()->json([
