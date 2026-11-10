@@ -35,22 +35,20 @@
     "scripts": {
         "setup": [
             "composer install",
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php artisan key:generate",
+            "@php artisan --env=dev key:generate",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --force",
-            "@php artisan db:seed --force",
-            "@php artisan storage:link",
+            "@php artisan --env=dev migrate --force",
+            "@php artisan --env=dev db:seed --force",
             "npm install",
             "npm run build"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1 --timeout=0\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan --env=dev serve --no-reload\" \"php artisan --env=dev queue:listen --tries=1 --timeout=0\" \"php artisan --env=dev pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
         "test": [
-            "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "@php artisan --env=dev config:clear --ansi",
+            "@php artisan --env=dev test"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -59,13 +57,10 @@
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
         "post-create-project-cmd": [
-            "@php artisan key:generate --ansi",
+            "@php artisan --env=dev key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"
+            "@php artisan --env=dev migrate --graceful --ansi"
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
